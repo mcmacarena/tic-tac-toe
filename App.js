@@ -2,32 +2,56 @@ import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, ImageBackground, Text, View, Button } from 'react-native';
 
 export default function App() {
-  const [arrayPressed, setArrayPressed] = useState([, , , , , , , , ])
+
+  // array multidimensional de 3x3
+  let arrayGrid = Array(3)
+  for (let i = 0; i < 3; i++) {
+    arrayGrid[i] = Array(3)
+    for (let j = 0; j < 3; j++) {
+      arrayGrid[i][j] = ''
+    }
+  }
+
+  const [arrayPressed, setArrayPressed] = useState(arrayGrid)
   const [player, setPlayer] = useState(true)
 
-  const buttonPress = (index) => {
+  const buttonPress = (indexExt, indexInt) => {
     const playerSymbol = player ? 'X' : 'O';
-    arrayPressed[index] = playerSymbol;
+    arrayPressed[indexExt][indexInt] = playerSymbol;
     setPlayer(!player)
 
-    if (arrayPressed[0]===arrayPressed[4]&&arrayPressed[8]||
-      arrayPressed[2]===arrayPressed[4]&&arrayPressed[6]||
-      arrayPressed[0]===arrayPressed[3]&&arrayPressed[6]||
-      arrayPressed[1]===arrayPressed[4]&&arrayPressed[7]||
-      arrayPressed[2]===arrayPressed[5]&&arrayPressed[8]||
-      arrayPressed[0]===arrayPressed[1]&&arrayPressed[2]||
-      arrayPressed[3]===arrayPressed[4]&&arrayPressed[5]||
-      arrayPressed[6]===arrayPressed[7]&&arrayPressed[8]){
-      setArrayPressed([, , , , , , , , ])
+    if (arrayPressed[0][0]===arrayPressed[0][1]&&arrayPressed[0][2]||
+      arrayPressed[1][0]===arrayPressed[1][1]&&arrayPressed[1][2]||
+      arrayPressed[2][0]===arrayPressed[2][1]&&arrayPressed[2][2]||
+      arrayPressed[0][0]===arrayPressed[1][0]&&arrayPressed[2][0]||
+      arrayPressed[0][1]===arrayPressed[1][1]&&arrayPressed[2][1]||
+      arrayPressed[0][2]===arrayPressed[1][2]&&arrayPressed[2][2]||
+      arrayPressed[0][0]===arrayPressed[1][1]&&arrayPressed[2][2]||
+      arrayPressed[0][2]===arrayPressed[1][1]&&arrayPressed[2][0]){
+      setArrayPressed(arrayGrid)
       setPlayer(true)
     }
   }
+
+  const print = arrayPressed.map((button, indexExt) => {
+    return <View key={indexExt} style={{ flexDirection: "row" }}>
+      {arrayPressed[indexExt].map((buttonPressed, indexInt) => {
+        return <TouchableOpacity key={indexInt} onPress={() => buttonPress(indexExt, indexInt)} style={[styles.tile]}>
+          {console.log('tile'+indexExt+indexInt)}
+          <Text style={styles.symbol}>
+            {buttonPressed}
+          </Text>
+        </TouchableOpacity>
+      })}
+    </View>
+  })
 
 
   return (
     <ImageBackground source={require('./assets/backgroundChristmasDog.jpg')} style={styles.background}>
       <View style={{ alignItems: 'center', justifyContent: 'flex-start', paddingTop: 80 }}>
-        <View style={{ flexDirection: "row" }}>
+        {print}
+        {/* <View style={{ flexDirection: "row" }}>
           <TouchableOpacity onPress={() => buttonPress(0)} style={[styles.tile, { borderLeftWidth: 0, borderTopWidth: 0 }]}>
             <Text style={styles.symbol}>{arrayPressed[0]}</Text>
           </TouchableOpacity>
@@ -59,8 +83,8 @@ export default function App() {
           <TouchableOpacity onPress={() => buttonPress(8)} style={[styles.tile, { borderRightWidth: 0, borderBottomWidth: 0 }]}>
             <Text style={styles.symbol}>{arrayPressed[8]}</Text>
           </TouchableOpacity>
-        </View>
-        <Button onPress={()=>setArrayPressed([, , , , , , , , ])} title="Reset" color="#8b0000" style={{ width:20, marginTop: 20 }}/>
+        </View> */}
+        <Button onPress={() => setArrayPressed(arrayGrid)} title="Reset" color="#8b0000" style={{ width: 20, marginTop: 20 }} />
       </View>
     </ImageBackground>
   );
@@ -79,8 +103,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     opacity: 100
   },
+  tile01: {
+    borderLeftWidth: 0,
+    borderTopWidth: 0
+  },
   symbol: {
     color: 'white',
-    fontSize:40
+    fontSize: 40
   },
 });
