@@ -33,12 +33,18 @@ export default function App() {
     setPlayer(!player)
 
     // jugadas ganadoras filas y columnas
+    let sumAllArray = '';
     for (let i = 0; i < 3; i++) {
       let sumRow = '';
       let sumCol = '';
       for (let j = 0; j < 3; j++) {
-        // suma de filas
         sumRow = sumRow.concat(arrayPressed[i][j])
+        sumCol = sumCol.concat(arrayPressed[j][i])
+        let sumDiag1 = arrayPressed[0][0] + arrayPressed[1][1] + arrayPressed[2][2]
+        let sumDiag2 = arrayPressed[0][2] + arrayPressed[1][1] + arrayPressed[2][0]
+        
+        sumAllArray += arrayPressed[i][j]
+        // suma de filas
         if (sumRow === 'XXX' || sumRow === 'OOO') {
           setModalVisible(!modalVisible)
           setFinalText('GANADOR: ' + (player ? 'X' : 'O') + '!!!')
@@ -47,48 +53,42 @@ export default function App() {
           background[indexExt][2] = 'rgba(225,225,225,0.7)'
         }
         // suma de columnas
-        sumCol = sumCol.concat(arrayPressed[j][i])
-        if (sumCol === 'XXX' || sumCol === 'OOO') {
+        
+        else if(sumCol === 'XXX' || sumCol === 'OOO') {
           setModalVisible(!modalVisible)
           setFinalText('GANADOR: ' + (player ? 'X' : 'O') + '!!!')
           background[0][indexInt] = 'rgba(225,225,225,0.7)'
           background[1][indexInt] = 'rgba(225,225,225,0.7)'
           background[2][indexInt] = 'rgba(225,225,225,0.7)'
         }
-      }
-    }
-
-    // jugadas ganadoras diagonales
-    let sumDiag1 = arrayPressed[0][0] + arrayPressed[1][1] + arrayPressed[2][2]
-    let sumDiag2 = arrayPressed[0][2] + arrayPressed[1][1] + arrayPressed[2][0]
-
-    if (sumDiag1 === 'XXX' || sumDiag1 === 'OOO') {
-      setModalVisible(!modalVisible)
-      setFinalText('GANADOR: ' + (player ? 'X' : 'O') + '!!!')
-      background[0][0] = 'rgba(225,225,225,0.7)';
-      background[1][1] = 'rgba(225,225,225,0.7)';
-      background[2][2] = 'rgba(225,225,225,0.7)';
-
-    }
-    if (sumDiag2 === 'XXX' || sumDiag2 === 'OOO') {
-      setModalVisible(!modalVisible)
-      setFinalText('GANADOR: ' + (player ? 'X' : 'O') + '!!!')
-      background[0][2] = 'rgba(225,225,225,0.7)';
-      background[1][1] = 'rgba(225,225,225,0.7)';
-      background[2][0] = 'rgba(225,225,225,0.7)';
-    }
-
-    // empate
-    let sumAllArray = '';
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        sumAllArray += arrayPressed[i][j]
-        if (sumAllArray.length === 9) {
+        // jugadas ganadoras diagonales
+        else if (sumDiag1 === 'XXX' || sumDiag1 === 'OOO') {
+          setModalVisible(!modalVisible)
+          setFinalText('GANADOR: ' + (player ? 'X' : 'O') + '!!!')
+          background[0][0] = 'rgba(225,225,225,0.7)';
+          background[1][1] = 'rgba(225,225,225,0.7)';
+          background[2][2] = 'rgba(225,225,225,0.7)';
+        }
+        else if (sumDiag2 === 'XXX' || sumDiag2 === 'OOO') {
+          setModalVisible(!modalVisible)
+          setFinalText('GANADOR: ' + (player ? 'X' : 'O') + '!!!')
+          background[0][2] = 'rgba(225,225,225,0.7)';
+          background[1][1] = 'rgba(225,225,225,0.7)';
+          background[2][0] = 'rgba(225,225,225,0.7)';
+        }
+        // empate
+        
+        else if (sumAllArray.length === 9) {
           setModalVisible(!modalVisible)
           setFinalText('EMPATE!!!')
         }
       }
     }
+
+
+
+    // empate
+
   }
 
   const print = arrayPressed.map((button, indexExt) => {
